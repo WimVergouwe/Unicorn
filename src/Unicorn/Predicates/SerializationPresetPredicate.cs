@@ -130,13 +130,10 @@ namespace Unicorn.Predicates
 			var names = new HashSet<string>();
 			foreach (var preset in presets)
 			{
-				if (!names.Contains(preset.Name))
+				if (!names.Add(preset.Name))
 				{
-					names.Add(preset.Name);
-					continue;
-				}
-
-				throw new InvalidOperationException("Multiple predicate include nodes had the same name '{0}'. This is not allowed. Note that this can occur if you did not specify the name attribute and two include entries end in an item with the same name. Use the name attribute on the include tag to give a unique name.".FormatWith(preset.Name));
+					throw new InvalidOperationException("Multiple predicate include nodes had the same name '{0}'. This is not allowed. Note that this can occur if you did not specify the name attribute and two include entries end in an item with the same name. Use the name attribute on the include tag to give a unique name.".FormatWith(preset.Name));
+				}				
 			}
 
 			return presets;

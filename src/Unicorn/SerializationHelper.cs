@@ -234,6 +234,9 @@ namespace Unicorn
 				if (startArgs.SyncIsHandled)
 				{
 					additionalLogger.Info("Unicorn Sync Start pipeline signalled that it handled the sync for all configurations.");
+					
+					CorePipeline.Run("unicornSyncEnd", new UnicornSyncEndPipelineArgs(additionalLogger, true, configurations));
+
 					return true;
 				}
 
@@ -337,6 +340,9 @@ namespace Unicorn
 					if (startArgs.SyncIsHandled)
 					{
 						logger.Info("Unicorn Sync Start pipeline signalled that it handled the sync for all configurations.");
+
+						CorePipeline.Run("unicornSyncComplete", new UnicornSyncCompletePipelineArgs(configuration, syncStartTimestamp));
+
 						return true;
 					}
 				}
