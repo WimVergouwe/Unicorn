@@ -346,7 +346,7 @@ namespace Unicorn
 
 					if (startArgs.SyncIsHandled)
 					{
-						logger.Info("Unicorn Sync Start pipeline signalled that it handled the sync for all configurations.");
+						logger.Info("Unicorn Sync Start pipeline signalled that it handled the sync for this configuration.");
 
 						CorePipeline.Run("unicornSyncComplete", new UnicornSyncCompletePipelineArgs(configuration, syncStartTimestamp));
 
@@ -371,6 +371,9 @@ namespace Unicorn
 					if (!dilithiumWasStarted) ReactorContext.Dispose();
 
 					logger.Info("Unicorn Sync Begin pipeline signalled that it handled the sync for this configuration.");
+
+					CorePipeline.Run("unicornSyncComplete", new UnicornSyncCompletePipelineArgs(configuration, syncStartTimestamp));
+
 					return true;
 				}
 
