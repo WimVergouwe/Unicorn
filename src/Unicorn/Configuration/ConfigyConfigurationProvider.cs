@@ -47,6 +47,22 @@ namespace Unicorn.Configuration
 			return Factory.GetConfigNode("/sitecore/unicorn");
 		}
 
+		protected virtual IContainer[] GetContainers(XmlElement configurationsNode, XmlElement baseContainerNode,
+			IXmlInheritanceEngine xmlInheritanceEngine)
+		{
+			// no configs let's get outta here
+			if (configurationsNode == null || baseContainerNode == null)
+			{
+				return new IConfiguration[0];
+			}
+
+			var parser = new XmlContainerParser(configurationsNode, baseContainerNode, new XmlInheritanceEngine());
+
+			var definitions = parser.GetContainers();
+
+			return GetContainers(definitions).ToArray();
+		}
+
 		protected virtual void LoadConfigurations()
 		{
 			var configNode = GetConfigurationNode();
@@ -59,18 +75,7 @@ namespace Unicorn.Configuration
 
 			var configurationNodes = configNode.SelectNodes("./configurations/configuration");
 
-			// no configs let's get outta here
-			if (configurationNodes == null || configurationNodes.Count == 0)
-			{
-				_configurations = new IConfiguration[0];
-				return;
-			}
-
-			var parser = new XmlContainerParser(configNode["configurations"], configNode["defaults"], new XmlInheritanceEngine());
-
-			var definitions = parser.GetContainers();
-
-			var configurations = GetContainers(definitions).ToArray();
+			var configurations = GetContainers(configNode?["configurations"], configNode?["defaults"], new XmlInheritanceEngine());
 
 			foreach (var configuration in configurations)
 			{
